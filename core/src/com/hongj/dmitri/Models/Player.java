@@ -14,14 +14,18 @@ public class Player extends Entity {
 
 	@Override
 	void update() {
-//		playerBody.applyForceToCenter(speedx, speedy, true);
-		if(playerBody.getAngle() > 45){	
-			
+		// playerBody.applyForceToCenter(speedx, speedy, true);
+		if (playerBody.getAngle() > 45) {
+
 		}
 	}
 
 	public Body getPlayerBody() {
 		return playerBody;
+	}
+
+	public enum PlayerState {
+		movingLeft, movingRight, jumping, dead, idle;
 	}
 
 }

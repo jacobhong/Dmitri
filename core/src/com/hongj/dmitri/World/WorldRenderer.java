@@ -22,6 +22,7 @@ import com.badlogic.gdx.physics.box2d.Box2DDebugRenderer;
 import com.badlogic.gdx.physics.box2d.FixtureDef;
 import com.badlogic.gdx.physics.box2d.PolygonShape;
 import com.badlogic.gdx.physics.box2d.World;
+import com.badlogic.gdx.utils.Array;
 import com.hongj.dmitri.Assets;
 
 public class WorldRenderer {
@@ -35,11 +36,11 @@ public class WorldRenderer {
 	private SpriteBatch batch;
 	private Texture background;
 	private MapLayer layer;
+	private Array<Body> bodies = new Array<Body>();
 
 	public WorldRenderer(B2DWorld world) {
 
 		this.world = world;
-
 		playerWalking = Assets.dmitriWalking;
 
 		player = world.getPlayerBody();
@@ -84,11 +85,11 @@ public class WorldRenderer {
 	public void render() {
 		Gdx.gl.glClearColor(0, 0, 0, 1);
 		Gdx.gl.glClear(GL20.GL_COLOR_BUFFER_BIT);
+
 		batch.setProjectionMatrix(camera.combined);
 		batch.begin();
 		batch.draw(background, -5, -5);
 		batch.end();
-
 		// follow player
 		if (player.getPosition().x < (8 / 2f)) {
 			camera.position.set(new Vector2(8 / 2f, 6 / 2f), 0);
@@ -97,7 +98,7 @@ public class WorldRenderer {
 		}
 		camera.position.y = player.getPosition().y + 2;
 		camera.update();
-		// shows debug lines in Box2dWorld
+
 		// render tile map to camera matrix
 		mapRenderer.setView(camera);
 		mapRenderer.render();
@@ -107,9 +108,18 @@ public class WorldRenderer {
 		batch.draw(playerWalking.getKeyFrame(Gdx.graphics.getDeltaTime()),
 				player.getPosition().x - .5f, player.getPosition().y - .5f,
 				.5f, .5f, 1, 1, 1, 1, player.getAngle()
-				* MathUtils.radiansToDegrees);
+						* MathUtils.radiansToDegrees);
+		world.getWorld().getBodies(bodies);
+		for (Body bod : bodies) {
+			
+			if (bod.getUserData() == "block") {
+				Vector2 v = bod.getPosition();
+				batch.draw(Assets.yellowBlock, v.x-.5f, v.y-.5f, 1, 1);
+			}
+		}
 		batch.end();
 
+		// shows debug lines in Box2dWorld
 		debugRenderer.render(world.getWorld(), camera.combined);
 	}
 
