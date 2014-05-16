@@ -1,0 +1,17 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<map version="1.0" orientation="orthogonal" width="60" height="13" tilewidth="32" tileheight="32">
+ <tileset firstgid="1" name="tiles" tilewidth="32" tileheight="32" spacing="2">
+  <image source="tiles.png" width="1002" height="714"/>
+ </tileset>
+ <layer name="tiles" width="60" height="13">
+  <data encoding="base64" compression="zlib">
+   eJxjYBgFIwH8ZBxoF4wCWgE+JgYGUSBWGSFxzMuIwOjAksZ2S9PYfGJBLJTWZKI9HgwglrCSYQVG/Tu8gfYgyVe0AppIbJBfYVgeWGbbDJirqA+skbAPIwRbM2Di4QIAQuQLFw==
+  </data>
+ </layer>
+ <objectgroup name="collision" width="60" height="13">
+  <object x="257" y="190" width="798" height="31"/>
+  <object x="30" y="161" width="97" height="17"/>
+  <object x="4" y="387" width="89" height="28"/>
+  <object x="160" y="387" width="158" height="28"/>
+ </objectgroup>
+</map>
