@@ -15,12 +15,6 @@ public class DmitriGame extends Game {
 	@Override
 	public void dispose() {
 		Assets.dispose();
-
 	}
 
-	@Override
-	public void render() {
-
-		super.render();
-	}
 }

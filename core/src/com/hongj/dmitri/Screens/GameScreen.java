@@ -14,7 +14,6 @@ public class GameScreen implements Screen {
 	WorldRenderer worldRenderer;
 	Box2DDebugRenderer debugRenderer;
 	DmitriGame game;
-	private float stateTime;
 
 	// GameState state;
 	// public enum GameState
@@ -32,7 +31,6 @@ public class GameScreen implements Screen {
 
 	@Override
 	public void render(float delta) {
-		stateTime += Gdx.graphics.getDeltaTime();
 		world.update();
 		worldRenderer.render();
 	}
@@ -61,6 +59,7 @@ public class GameScreen implements Screen {
 
 	@Override
 	public void dispose() {
+		
 	}
 
 }

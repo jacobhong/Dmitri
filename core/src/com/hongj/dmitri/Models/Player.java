@@ -1,44 +1,62 @@
 package com.hongj.dmitri.Models;
 
+import com.badlogic.gdx.Gdx;
 import com.badlogic.gdx.math.Vector2;
 import com.badlogic.gdx.physics.box2d.Body;
 
 public class Player extends Entity {
-	private Body playerBody;
-	private float speedx = 100, speedy = 0;
+	private Body body;
+	private float speedx = 4, speedy = 0;
+	private PlayerState state;
+	private boolean facingLeft, touchingGround;
 
 	public Player(Vector2 position, float width, float height, Body body) {
-		super(position, width, height);
-		playerBody = body;
+		super(position, body, height, width);
+		this.body = body;
+		state = PlayerState.IDLE;
+		facingLeft = false;
+		touchingGround = true;
 	}
 
 	@Override
-	void update() {
-		// playerBody.applyForceToCenter(speedx, speedy, true);
-		if (playerBody.getAngle() > 45) {
-
+	public void update() {
+		if (state == PlayerState.MOVINGLEFT) {
+			body.applyForceToCenter(new Vector2(-speedx, speedy), true);
+			stateTime += Gdx.graphics.getDeltaTime();
 		}
+		if (state == PlayerState.MOVINGRIGHT) {
+			body.applyForceToCenter(new Vector2(speedx, speedy), true);
+			stateTime += Gdx.graphics.getDeltaTime();
+		}
+
 	}
 
-	public Body getPlayerBody() {
-		return playerBody;
+	public void setTouchingGround(boolean touchingGround) {
+		this.touchingGround = touchingGround;
+	}
+
+	public Boolean getTouchingGround() {
+		return touchingGround;
+	}
+
+	public void setFacingLeft(boolean facingLeft) {
+		this.facingLeft = facingLeft;
+	}
+
+	public Boolean getFacingLeft() {
+		return facingLeft;
+	}
+
+	public PlayerState getState() {
+		return state;
+	}
+
+	public void setState(PlayerState state) {
+		this.state = state;
 	}
 
 	public enum PlayerState {
-		movingLeft, movingRight, jumping, dead, idle;
+		IDLE, DEAD, MOVINGLEFT, MOVINGRIGHT;
 	}
 
 }
-
-// BodyDef bdef = new BodyDef();
-// bdef.type = BodyType.DynamicBody;
-// bdef.position.set(body.getPosition());
-//
-// PolygonShape pshape = new PolygonShape();
-// pshape.setAsBox(width / 2, height / 2);
-//
-// FixtureDef fdef = new FixtureDef();
-// fdef.shape = pshape;
-// fdef.density = .3f;
-// fdef.friction = .3f;
-// fdef.restitution = .1f;
