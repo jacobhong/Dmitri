@@ -10,15 +10,13 @@ public abstract class Entity {
 	protected Body body;
 	protected float width, height;
 	protected Vector2 position;
-	protected Rectangle bounds;
 	protected float stateTime;
 
-	public Entity(Vector2 position, Body body, float width, float height) {
+	protected Entity(Vector2 position, Body body, float width, float height) {
 		this.position = position;
 		this.body = body;
 		this.width = width;
 		this.height = height;
-		bounds = new Rectangle(position.x, position.y, width, height);
 	}
 
 	public abstract void update();
@@ -33,10 +31,6 @@ public abstract class Entity {
 
 	public Vector2 getPosition() {
 		return position;
-	}
-
-	public Rectangle getBounds() {
-		return bounds;
 	}
 
 	public void setWidth(float width) {

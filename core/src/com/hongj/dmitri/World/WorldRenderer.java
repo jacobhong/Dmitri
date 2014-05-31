@@ -31,6 +31,7 @@ public class WorldRenderer {
 			spinnerHalfSpinning;
 	private SpriteBatch batch;
 	private Texture background;
+	private Sprite slammingBlock;
 	private Array<KinematicEntity> kinematicEntities;
 	private Array<Body> bodies;
 
@@ -39,6 +40,7 @@ public class WorldRenderer {
 		this.world = world;
 		bodies = new Array<Body>();
 		player = world.getPlayer();
+		slammingBlock = new Sprite(Assets.slammingBlock);
 		slimeWalking = Assets.slimeWalking;
 		snailWalking = Assets.snailWalking;
 		spinnerHalfSpinning = Assets.spinnerHalfSpinning;
@@ -54,7 +56,7 @@ public class WorldRenderer {
 		batch = new SpriteBatch();
 		background = Assets.background;
 
-		mapRenderer = new OrthogonalTiledMapRenderer(world.getMap(), 1 / 32f);
+		mapRenderer = new OrthogonalTiledMapRenderer(world.getMap(), 1 / 70f);
 
 	}
 
@@ -122,20 +124,32 @@ public class WorldRenderer {
 							.equals("elevator")) {
 				batch.draw(Assets.elevator, body.getPosition().x - OFFSET,
 						body.getPosition().y - OFFSET, 1, 1);
+			}
+
+			else if (body.getFixtureList().get(0).getUserData() != null
+					&& body.getFixtureList().get(0).getUserData()
+							.equals("slamming block")) {
+				batch.draw(slammingBlock, body.getPosition().x
+						- WorldRenderer.OFFSET, body.getPosition().y
+						- WorldRenderer.OFFSET, 1, 1);
 			} else if (body.getFixtureList().get(0).getUserData() != null
 					&& body.getFixtureList().get(0).getUserData()
 							.equals("slime")) {
-				batch.draw(slimeWalking.getKeyFrame(0), body.getPosition().x,
+				batch.draw(slimeWalking.getKeyFrame(((KinematicEntity) body
+						.getUserData()).getStateTime()), body.getPosition().x,
 						body.getPosition().y, 1, 1);
 			} else if (body.getFixtureList().get(0).getUserData() != null
 					&& body.getFixtureList().get(0).getUserData()
 							.equals("snail")) {
-				batch.draw(snailWalking.getKeyFrame(0), body.getPosition().x
+				batch.draw(snailWalking.getKeyFrame(((KinematicEntity) body
+						.getUserData()).getStateTime()), body.getPosition().x
 						- OFFSET, body.getPosition().y - OFFSET, 1, 1);
 			} else if (body.getFixtureList().get(0).getUserData() != null
 					&& body.getFixtureList().get(0).getUserData()
-							.equals("spinning half")) {
-				batch.draw(spinnerHalfSpinning.getKeyFrame(0),
+							.equals("spinner half")) {
+				batch.draw(spinnerHalfSpinning
+						.getKeyFrame(((KinematicEntity) body.getUserData())
+								.getStateTime()),
 						body.getPosition().x - OFFSET, body.getPosition().y
 								- OFFSET, 1, 1);
 			}

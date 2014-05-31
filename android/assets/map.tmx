@@ -1,42 +1,42 @@
 <?xml version="1.0" encoding="UTF-8"?>
-<map version="1.0" orientation="orthogonal" width="60" height="30" tilewidth="32" tileheight="32">
- <tileset firstgid="1" name="tiles" tilewidth="32" tileheight="32" spacing="2" margin="2">
-  <tileoffset x="2" y="2"/>
-  <image source="tiles.png" width="1002" height="714"/>
+<map version="1.0" orientation="orthogonal" width="60" height="35" tilewidth="70" tileheight="70">
+ <tileset firstgid="1" name="tiles" tilewidth="70" tileheight="70" spacing="2">
+  <image source="tiles.png" width="914" height="936"/>
  </tileset>
- <layer name="tiles" width="60" height="30">
+ <tileset firstgid="157" name="tilesExtras" tilewidth="70" tileheight="70">
+  <image source="tilesExtras.png" width="980" height="490"/>
+ </tileset>
+ <tileset firstgid="255" name="buildings" tilewidth="70" tileheight="70">
+  <image source="buildings.png" width="980" height="490"/>
+ </tileset>
+ <tileset firstgid="353" name="candy" tilewidth="70" tileheight="70">
+  <image source="candy.png" width="980" height="490"/>
+ </tileset>
+ <tileset firstgid="451" name="ice" tilewidth="70" tileheight="70">
+  <image source="ice.png" width="980" height="490"/>
+ </tileset>
+ <tileset firstgid="549" name="snow" tilewidth="70" tileheight="70">
+  <image source="snow.png" width="512" height="512"/>
+ </tileset>
+ <tileset firstgid="598" name="sand" tilewidth="70" tileheight="70">
+  <image source="sand.png" width="512" height="512"/>
+ </tileset>
+ <tileset firstgid="647" name="mushroom" tilewidth="70" tileheight="70" margin="2">
+  <image source="mushroom.png" width="512" height="512"/>
+ </tileset>
+ <layer name="tiles" width="60" height="35">
   <data encoding="base64" compression="zlib">
-   eJzt1LENwCAQBEHcf3sU5NSW4PO/n5FILluQWOtsP/+TTi8dTXtHvdluve4hm95sejNM+5/11nt3euu9O731DgAAXy/oP1nd
+   eJzt0rENwCAMBEDvwQSskobZ2JgmBUpEC4TcSS+7fEuOAAAAAABgB2V1gcnSnegm7KquLjBZjffNudvTI193DcI/nPbPcJIGaS8FEQ==
   </data>
  </layer>
- <objectgroup name="spawn points" width="60" height="30">
-  <object name="player" x="32" y="352" width="32" height="32"/>
-  <object name="spinner half" x="320" y="202" width="16" height="16">
-   <properties>
-    <property name="isHorizontal" value="t-"/>
-    <property name="maxDistance" value="3"/>
-    <property name="speed" value="1"/>
-   </properties>
-  </object>
-  <object name="elevator" x="144" y="640" width="32" height="32">
-   <properties>
-    <property name="isHorizontal" value="f+"/>
-    <property name="maxDistance" value="15"/>
-    <property name="speed" value="1.5"/>
-   </properties>
-  </object>
-  <object name="snail" x="0" y="109" width="16" height="16">
-   <properties>
-    <property name="isHorizontal" value="t+"/>
-    <property name="maxDistance" value="3"/>
-    <property name="speed" value=".75"/>
-   </properties>
-  </object>
+ <objectgroup name="collision" width="60" height="35">
+  <object x="0" y="2030" width="420" height="70"/>
+  <object name="passable" x="560" y="2170" width="280" height="70"/>
+  <object name="passable" x="560" y="1960" width="280" height="70"/>
+  <object name="passable" x="560" y="1680" width="140" height="70"/>
+  <object name="passable" x="770" y="1680" width="70" height="70"/>
  </objectgroup>
- <objectgroup name="collision" width="60" height="30">
-  <object x="0" y="128" width="128" height="128"/>
-  <object x="192" y="224" width="128" height="416"/>
-  <object x="0" y="416" width="128" height="224"/>
-  <object x="192" y="0" width="128" height="96"/>
+ <objectgroup name="spawn points" width="60" height="35">
+  <object name="player" x="140" y="1890"/>
  </objectgroup>
 </map>

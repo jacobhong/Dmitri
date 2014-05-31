@@ -18,6 +18,7 @@ import com.hongj.dmitri.Assets;
 import com.hongj.dmitri.Controllers.CollisionHandler;
 import com.hongj.dmitri.Models.KinematicEntity;
 import com.hongj.dmitri.Models.Player;
+import com.hongj.dmitri.Models.SlammingBlock;
 
 public class B2DWorld {
 	private Array<Body> bodies;
@@ -33,8 +34,9 @@ public class B2DWorld {
 		bodies = new Array<Body>();
 		// create world
 		world = new World(new Vector2(0, -9.81f), true);
-		world.setContactListener(new CollisionHandler(this));
-
+		CollisionHandler handler = new CollisionHandler(this);
+		world.setContactListener(handler);
+		world.setContactFilter(handler);
 		kinematicEntities = new Array<KinematicEntity>();
 
 		// set up reusable BodyDef and FixtureDef
@@ -46,6 +48,7 @@ public class B2DWorld {
 		createHalfSpinners(bdef, fdef);
 		createMoveableBlocks(bdef, fdef);
 		createPlayer(bdef, fdef);
+		createSlammingBlock(bdef, fdef);
 		createSlimes(bdef, fdef);
 		createSnails(bdef, fdef);
 	}
@@ -60,21 +63,27 @@ public class B2DWorld {
 				BodyDef bdef = new BodyDef();
 				bdef.type = BodyType.StaticBody;
 				bdef.position.set(((RectangleMapObject) mo).getRectangle().x
-						/ 32f + ((RectangleMapObject) mo).getRectangle().width
-						/ 32 / 2, ((RectangleMapObject) mo).getRectangle().y
-						/ 32f + ((RectangleMapObject) mo).getRectangle().height
-						/ 32 / 2);
+						/ 70f + ((RectangleMapObject) mo).getRectangle().width
+						/ 70 / 2, ((RectangleMapObject) mo).getRectangle().y
+						/ 70f + ((RectangleMapObject) mo).getRectangle().height
+						/ 70 / 2);
 
 				PolygonShape shape = new PolygonShape();
 				shape.setAsBox(
-						((RectangleMapObject) mo).getRectangle().width / 32f / 2,
-						((RectangleMapObject) mo).getRectangle().height / 32f / 2);
+						((RectangleMapObject) mo).getRectangle().width / 70f / 2,
+						((RectangleMapObject) mo).getRectangle().height / 70f / 2);
 
 				FixtureDef fdef = new FixtureDef();
+
 				fdef.shape = shape;
 
 				Body body = world.createBody(bdef);
-				body.createFixture(fdef);
+
+				if (mo.getName() != null && mo.getName().equals("passable")) {
+					body.createFixture(fdef).setUserData("passable");
+				} else {
+					body.createFixture(fdef).setUserData("collision");
+				}
 			}
 		}
 	}
@@ -85,8 +94,8 @@ public class B2DWorld {
 		for (MapObject mo : layer.getObjects()) {
 			if (mo instanceof RectangleMapObject) {
 				if (mo.getName().equals("player")) {
-					pos.x = ((RectangleMapObject) mo).getRectangle().x / 32f;
-					pos.y = ((RectangleMapObject) mo).getRectangle().y / 32f;
+					pos.x = ((RectangleMapObject) mo).getRectangle().x / 70f;
+					pos.y = ((RectangleMapObject) mo).getRectangle().y / 70f;
 
 					bdef.type = BodyType.DynamicBody;
 					bdef.position.set(pos.x, pos.y);
@@ -94,12 +103,12 @@ public class B2DWorld {
 
 					// rectangle
 					PolygonShape shape = new PolygonShape();
-					shape.setAsBox(.5f, .5f);
+					shape.setAsBox(.4f, .4f);
 
 					// body physics
 					fdef.shape = shape;
-					fdef.density = .3f;
-					fdef.friction = 2;
+					fdef.density = .5f;
+					fdef.friction = .7f;
 					fdef.isSensor = false;
 					fdef.restitution = 0;
 
@@ -108,7 +117,7 @@ public class B2DWorld {
 					playerBody.createFixture(fdef);
 
 					// create foot sensor
-					shape.setAsBox(.4f, .1f, new Vector2(0, -.4f), 0);
+					shape.setAsBox(.3f, .1f, new Vector2(0, -.4f), 0);
 
 					fdef.shape = shape;
 					playerBody.createFixture(fdef).setUserData("foot");
@@ -130,8 +139,8 @@ public class B2DWorld {
 		for (MapObject mo : layer.getObjects()) {
 			if (mo instanceof RectangleMapObject
 					&& mo.getName().equals("block")) {
-				pos.x = ((RectangleMapObject) mo).getRectangle().x / 32f;
-				pos.y = ((RectangleMapObject) mo).getRectangle().y / 32f;
+				pos.x = ((RectangleMapObject) mo).getRectangle().x / 70f;
+				pos.y = ((RectangleMapObject) mo).getRectangle().y / 70f;
 				// create vertical moving blocks and joint
 				bdef.type = BodyType.DynamicBody;
 				bdef.position.set(pos.x, pos.y);
@@ -173,6 +182,11 @@ public class B2DWorld {
 		createKinematicEntity(bdef, fdef, "elevator");
 	}
 
+	private void createSlammingBlock(BodyDef bdef, FixtureDef fdef) {
+		fdef.isSensor = false;
+		createKinematicEntity(bdef, fdef, "slamming block");
+	}
+
 	private void createSlimes(BodyDef bdef, FixtureDef fdef) {
 		fdef.isSensor = true;
 		createKinematicEntity(bdef, fdef, "slime");
@@ -199,15 +213,14 @@ public class B2DWorld {
 		Vector2 vel = new Vector2();
 		for (MapObject mo : layer.getObjects()) {
 			if (mo instanceof RectangleMapObject && mo.getName().equals(name)) {
-				pos.x = ((RectangleMapObject) mo).getRectangle().x / 32f;
-				pos.y = ((RectangleMapObject) mo).getRectangle().y / 32f;
+				pos.x = ((RectangleMapObject) mo).getRectangle().x / 70f;
+				pos.y = ((RectangleMapObject) mo).getRectangle().y / 70f;
 
 				distance = Float.parseFloat((String) mo.getProperties().get(
 						"maxDistance"));
 				horizontal = (String) mo.getProperties().get("isHorizontal");
 				speed = Float.parseFloat((String) mo.getProperties().get(
 						"speed"));
-				System.out.println(speed);
 				if (horizontal.startsWith("t") && horizontal.endsWith("+")) {
 					vel = new Vector2(speed, 0);
 				} else if (horizontal.startsWith("t")
@@ -235,12 +248,17 @@ public class B2DWorld {
 				Body body = world.createBody(bdef);
 
 				body.createFixture(fdef).setUserData(name);
-
-				KinematicEntity kinematicEntity = new KinematicEntity(
-						new Vector2(pos.x, pos.y), body, .5f, .5f, distance,
-						vel);
-				kinematicEntities.add(kinematicEntity);
-
+				if (mo.getName().equals("slamming block")) {
+					SlammingBlock slammingBlock = new SlammingBlock(
+							new Vector2(pos.x, pos.y), body, .5f, .5f,
+							distance, vel);
+					kinematicEntities.add(slammingBlock);
+				} else {
+					KinematicEntity kinematicEntity = new KinematicEntity(
+							new Vector2(pos.x, pos.y), body, .5f, .5f,
+							distance, vel);
+					kinematicEntities.add(kinematicEntity);
+				}
 				shape.dispose();
 			}
 		}
@@ -257,15 +275,18 @@ public class B2DWorld {
 		for (Body body : bodies) {
 			if (body.getUserData() != null && body.getUserData() == player) {
 				player.update();
-			}
-			if (body.getUserData() != null
+			} else if (body.getUserData() != null
+					&& body.getUserData() instanceof SlammingBlock) {
+				SlammingBlock b = (SlammingBlock) body.getUserData();
+				b.update();
+
+			} else if (body.getUserData() != null
 					&& body.getUserData() instanceof KinematicEntity) {
 				KinematicEntity b = (KinematicEntity) body.getUserData();
 				b.update();
-
 			}
-
 		}
+
 	}
 
 	public World getWorld() {
